@@ -1,0 +1,21 @@
+{
+  "name": "python-mineflayer-bot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Python-controlled Mineflayer bot with prismarine-viewer",
+  "main": "bridge/index.js",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env bridge/index.js",
+    "check": "node --check bridge/index.js",
+    "test": "npm run check"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "canvas": "3.2.3",
+    "mineflayer": "4.38.0",
+    "mineflayer-pathfinder": "2.4.5",
+    "prismarine-viewer": "1.33.0"
+  }
+}
