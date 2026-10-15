@@ -3,7 +3,7 @@
 const readline = require('node:readline')
 const mineflayer = require('mineflayer')
 const { pathfinder, Movements, goals: { GoalGetToBlock } } = require('mineflayer-pathfinder')
-const { mineflayer: startViewer } = require('prismarine-viewer')
+const { startViewer } = require('./viewer')
 
 function readInteger(name, fallback) {
   const raw = process.env[name]
@@ -75,25 +75,25 @@ emit('connecting', {
   auth: config.auth
 })
 
-bot.once('spawn', () => {
+bot.once('spawn', async () => {
   spawned = true
   configureHarvesting()
-  emit('spawn', { username: bot.username })
 
-  if (!config.viewerEnabled) return
-  try {
-    const viewerResult = startViewer(bot, {
-      port: config.viewerPort,
-      firstPerson: true,
-      viewDistance: 6
-    })
-    if (viewerResult && typeof viewerResult.catch === 'function') {
-      viewerResult.catch((error) => emit('viewer_error', { message: error.message }))
+  if (config.viewerEnabled) {
+    try {
+      bot.viewer = await startViewer(bot, { port: config.viewerPort })
+      if (!spawned || shuttingDown) {
+        await bot.viewer.close()
+        return
+      }
+      emit('viewer_started', { url: bot.viewer.url })
+    } catch (error) {
+      emit('viewer_error', { message: error.message })
+      bot.quit('Viewer failed to start')
+      return
     }
-    emit('viewer_started', { url: `http://localhost:${config.viewerPort}` })
-  } catch (error) {
-    emit('viewer_error', { message: error.message })
   }
+  if (spawned && !shuttingDown) emit('spawn', { username: bot.username })
 })
 
 bot.on('chat', (username, message) => emit('chat', { username, message }))

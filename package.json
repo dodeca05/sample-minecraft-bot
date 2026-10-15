@@ -7,15 +7,26 @@
   "scripts": {
     "start": "node --env-file-if-exists=.env bridge/index.js",
     "check": "node --check bridge/index.js",
-    "test": "npm run check"
+    "test": "node --test test/*.test.js"
   },
   "engines": {
     "node": ">=22"
   },
   "dependencies": {
     "canvas": "3.2.3",
+    "compression": "1.8.1",
+    "express": "4.22.2",
+    "minecraft-data": "3.116.0",
     "mineflayer": "4.38.0",
     "mineflayer-pathfinder": "2.4.5",
-    "prismarine-viewer": "1.33.0"
+    "prismarine-block": "1.23.0",
+    "prismarine-chunk": "1.41.0",
+    "prismarine-viewer": "1.33.0",
+    "prismarine-world": "3.7.0",
+    "socket.io": "4.8.3",
+    "vec3": "0.1.10"
+  },
+  "devDependencies": {
+    "socket.io-client": "4.8.3"
   }
 }

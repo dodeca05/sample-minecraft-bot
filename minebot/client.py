@@ -52,8 +52,9 @@ def load_env_file(path: Path) -> dict[str, str]:
 
 
 class MineflayerBot:
-    def __init__(self) -> None:
+    def __init__(self, *, viewer_demo: bool = False) -> None:
         self.project_dir = Path(__file__).resolve().parent.parent
+        self.viewer_demo = viewer_demo
         self._process: asyncio.subprocess.Process | None = None
         self._events: asyncio.Queue[BotEvent] = asyncio.Queue()
         self._pending: dict[int, asyncio.Future[Any]] = {}
@@ -69,7 +70,7 @@ class MineflayerBot:
         if self.running:
             return self
 
-        bridge = self.project_dir / "bridge" / "index.js"
+        bridge = self.project_dir / "bridge" / ("viewer-demo.js" if self.viewer_demo else "index.js")
         if not bridge.exists():
             raise FileNotFoundError(f"Mineflayer bridge not found: {bridge}")
 
